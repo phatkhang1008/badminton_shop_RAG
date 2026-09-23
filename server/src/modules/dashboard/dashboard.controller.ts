@@ -8,10 +8,18 @@ export async function getDashboardSummary(_request: Request, response: Response)
   }
 
   const [products, orders, customers, lowStock, revenueResult] = await Promise.all([
-    database.collection("products").countDocuments({ status: { $ne: "deleted" } }),
+    database.collection("products").countDocuments({ deletedAt: null }),
     database.collection("orders").countDocuments({}),
-    database.collection("users").countDocuments({ role: "customer" }),
-    database.collection("products").countDocuments({ stock: { $lte: 5 }, status: "active" }),
+    database.collection("users").countDocuments({ role: "customer", deletedAt: null }),
+    database
+      .collection("products")
+      .aggregate<{ total: number }>([
+        { $match: { status: "active", deletedAt: null } },
+        { $project: { totalStock: { $sum: "$variants.stock" } } },
+        { $match: { totalStock: { $lte: 5 } } },
+        { $count: "total" },
+      ])
+      .toArray(),
     database
       .collection("orders")
       .aggregate<{ total: number }>([
@@ -27,9 +35,8 @@ export async function getDashboardSummary(_request: Request, response: Response)
       products,
       orders,
       customers,
-      lowStock,
+      lowStock: lowStock[0]?.total ?? 0,
       revenue: revenueResult[0]?.total ?? 0,
     },
   });
 }
-

@@ -11,6 +11,7 @@ export interface User {
   status: UserStatus;
   refreshTokenHash?: string | null;
   lastLoginAt?: Date | null;
+  deletedAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -34,6 +35,7 @@ const userSchema = new Schema<User, UserModel>(
     status: { type: String, enum: ["active", "blocked"], default: "active", index: true },
     refreshTokenHash: { type: String, default: null, select: false },
     lastLoginAt: { type: Date, default: null },
+    deletedAt: { type: Date, default: null, index: true },
   },
   {
     timestamps: true,

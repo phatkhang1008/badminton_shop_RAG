@@ -1,4 +1,5 @@
 import type { ErrorRequestHandler, RequestHandler } from "express";
+import { MulterError } from "multer";
 import { ZodError } from "zod";
 import { AppError } from "../utils/AppError.js";
 
@@ -7,6 +8,17 @@ export const notFoundHandler: RequestHandler = (request, _response, next) => {
 };
 
 export const errorHandler: ErrorRequestHandler = (error, _request, response, _next) => {
+  if (error instanceof MulterError) {
+    response.status(400).json({
+      success: false,
+      error: {
+        code: error.code,
+        message: error.code === "LIMIT_FILE_SIZE" ? "Ảnh không được vượt quá 5 MB." : "Không thể tải ảnh lên.",
+      },
+    });
+    return;
+  }
+
   if (error instanceof ZodError) {
     response.status(400).json({
       success: false,
@@ -36,4 +48,3 @@ export const errorHandler: ErrorRequestHandler = (error, _request, response, _ne
     error: { code: "INTERNAL_ERROR", message: "Đã xảy ra lỗi máy chủ." },
   });
 };
-

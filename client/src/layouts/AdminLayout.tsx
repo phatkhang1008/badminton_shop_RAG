@@ -27,7 +27,7 @@ export function AdminLayout() {
   const user = queryClient.getQueryData<{ name: string; email: string }>(currentUserQueryKey);
 
   const selectedKey = useMemo(() => {
-    const matching = ["products", "categories", "brands", "orders", "customers"].find((segment) =>
+    const matching = ["products", "categories", "brands", "orders", "users"].find((segment) =>
       location.pathname.includes(`/${segment}`),
     );
     return matching ?? "dashboard";
@@ -70,7 +70,7 @@ export function AdminLayout() {
             { key: "categories", icon: <TagsOutlined />, label: "Danh mục" },
             { key: "brands", icon: <TrademarkOutlined />, label: "Thương hiệu" },
             { key: "orders", icon: <ShoppingCartOutlined />, label: "Đơn hàng" },
-            { key: "customers", icon: <TeamOutlined />, label: "Khách hàng" },
+            { key: "users", icon: <TeamOutlined />, label: "Người dùng" },
           ]}
         />
       </Sider>

@@ -18,7 +18,9 @@ function publicUser(user: { id: string; name: string; email: string; role: strin
 
 export async function login(request: Request, response: Response): Promise<void> {
   const credentials = loginSchema.parse(request.body);
-  const user = await UserModel.findOne({ email: credentials.email }).select("+password +refreshTokenHash");
+  const user = await UserModel.findOne({ email: credentials.email, deletedAt: null }).select(
+    "+password +refreshTokenHash",
+  );
 
   if (!user || !(await bcrypt.compare(credentials.password, user.password))) {
     throw new AppError("Email hoặc mật khẩu không đúng.", 401, "INVALID_CREDENTIALS");
@@ -47,7 +49,9 @@ export async function refresh(request: Request, response: Response): Promise<voi
   }
 
   const payload = verifyRefreshToken(token);
-  const user = await UserModel.findById(payload.sub).select("+refreshTokenHash");
+  const user = await UserModel.findOne({ _id: payload.sub, deletedAt: null }).select(
+    "+refreshTokenHash",
+  );
   if (!user || !user.refreshTokenHash || user.refreshTokenHash !== hashToken(token)) {
     throw new AppError("Phiên đăng nhập không hợp lệ.", 401, "INVALID_SESSION");
   }
@@ -78,10 +82,9 @@ export async function logout(request: Request, response: Response): Promise<void
 }
 
 export async function me(request: Request, response: Response): Promise<void> {
-  const user = await UserModel.findById(request.auth?.userId);
+  const user = await UserModel.findOne({ _id: request.auth?.userId, deletedAt: null });
   if (!user || user.status !== "active") {
     throw new AppError("Không tìm thấy tài khoản đang đăng nhập.", 401, "USER_NOT_FOUND");
   }
   response.json({ success: true, data: { user: publicUser(user) } });
 }
-

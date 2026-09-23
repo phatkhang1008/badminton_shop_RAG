@@ -12,6 +12,18 @@ const StorefrontPlaceholderPage = lazy(() =>
 );
 const AdminLoginPage = lazy(() => import("../pages/admin/LoginPage").then((module) => ({ default: module.LoginPage })));
 const DashboardPage = lazy(() => import("../pages/admin/DashboardPage").then((module) => ({ default: module.DashboardPage })));
+const ProductManagementPage = lazy(() =>
+  import("../pages/admin/catalog/ProductManagementPage").then((module) => ({ default: module.ProductManagementPage })),
+);
+const CategoryManagementPage = lazy(() =>
+  import("../pages/admin/catalog/CategoryManagementPage").then((module) => ({ default: module.CategoryManagementPage })),
+);
+const BrandManagementPage = lazy(() =>
+  import("../pages/admin/catalog/BrandManagementPage").then((module) => ({ default: module.BrandManagementPage })),
+);
+const UserManagementPage = lazy(() =>
+  import("../pages/admin/users/UserManagementPage").then((module) => ({ default: module.UserManagementPage })),
+);
 const AdminPlaceholderPage = lazy(() =>
   import("../pages/admin/AdminPlaceholderPage").then((module) => ({ default: module.AdminPlaceholderPage })),
 );
@@ -36,11 +48,12 @@ export function AppRoutes() {
         <Route element={<AuthGuard />}>
           <Route path={paths.admin.root} element={<AdminLayout />}>
             <Route index element={<DashboardPage />} />
-            <Route path="products" element={<AdminPlaceholderPage />} />
-            <Route path="categories" element={<AdminPlaceholderPage />} />
-            <Route path="brands" element={<AdminPlaceholderPage />} />
+            <Route path="products" element={<ProductManagementPage />} />
+            <Route path="categories" element={<CategoryManagementPage />} />
+            <Route path="brands" element={<BrandManagementPage />} />
             <Route path="orders" element={<AdminPlaceholderPage />} />
-            <Route path="customers" element={<AdminPlaceholderPage />} />
+            <Route path="users" element={<UserManagementPage />} />
+            <Route path="customers" element={<Navigate to={paths.admin.users} replace />} />
           </Route>
         </Route>
 

@@ -1,9 +1,9 @@
 import type { RequestHandler } from "express";
 import { AppError } from "../utils/AppError.js";
 import { verifyAccessToken } from "../modules/auth/auth.tokens.js";
-import type { UserRole } from "../modules/users/user.model.js";
+import { UserModel, type UserRole } from "../modules/users/user.model.js";
 
-export const authenticate: RequestHandler = (request, _response, next) => {
+export const authenticate: RequestHandler = async (request, _response, next) => {
   const token = request.cookies?.accessToken as string | undefined;
   if (!token) {
     next(new AppError("Bạn chưa đăng nhập.", 401, "UNAUTHENTICATED"));
@@ -12,7 +12,20 @@ export const authenticate: RequestHandler = (request, _response, next) => {
 
   try {
     const payload = verifyAccessToken(token);
-    request.auth = { userId: payload.sub, role: payload.role };
+    const user = await UserModel.findOne({
+      _id: payload.sub,
+      status: "active",
+      deletedAt: null,
+    })
+      .select("role")
+      .lean();
+
+    if (!user || user.role !== payload.role) {
+      next(new AppError("Tài khoản không còn quyền truy cập.", 401, "ACCOUNT_ACCESS_CHANGED"));
+      return;
+    }
+
+    request.auth = { userId: payload.sub, role: user.role };
     next();
   } catch (error) {
     next(error);
@@ -28,4 +41,3 @@ export function authorize(...roles: UserRole[]): RequestHandler {
     next();
   };
 }
-
