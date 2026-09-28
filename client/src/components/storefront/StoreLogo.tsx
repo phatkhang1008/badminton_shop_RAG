@@ -14,12 +14,11 @@ export function StoreLogo({ variant = "header" }: StoreLogoProps) {
       to={paths.home}
       aria-label="Badminton Shop - Trang chủ"
     >
-      <span className="brand-mark">B</span>
+      <span className="brand-mark" aria-hidden="true"><i /><i /><i /></span>
       <span>
-        <strong>Badminton Shop</strong>
-        <small>{isFooter ? "Đồng hành cùng đam mê cầu lông" : "Play beyond limits"}</small>
+        <strong>BS<span>PORT</span></strong>
+        <small>{isFooter ? "Đồng hành cùng đam mê cầu lông" : "Cầu lông chính hãng"}</small>
       </span>
     </Link>
   );
 }
-

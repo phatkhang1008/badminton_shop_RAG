@@ -1,11 +1,15 @@
 import {
+  CustomerServiceOutlined,
+  EnvironmentOutlined,
+  EyeOutlined,
   MenuOutlined,
   RobotOutlined,
+  SearchOutlined,
   ShoppingCartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Badge, Button, Drawer } from "antd";
-import { useState } from "react";
+import { Badge, Drawer, Input } from "antd";
+import { useState, type FormEvent } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { StoreLogo } from "../components/storefront/StoreLogo";
 import { useCart } from "../cart/useCart";
@@ -14,13 +18,23 @@ import { paths } from "../routes/paths";
 const navigation = [
   { label: "Trang chủ", to: paths.home },
   { label: "Sản phẩm", to: paths.products },
+  { label: "Sale off", to: paths.products },
+  { label: "Tin tức", to: paths.aiAdvisor },
   { label: "Tư vấn AI", to: paths.aiAdvisor, icon: <RobotOutlined /> },
+  { label: "Giới thiệu", to: paths.account },
+  { label: "Liên hệ", to: paths.account },
 ];
 
 export function StorefrontLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [keyword, setKeyword] = useState("");
   const navigate = useNavigate();
   const { itemCount } = useCart();
+
+  const submitSearch = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    navigate(keyword.trim() ? `${paths.products}?q=${encodeURIComponent(keyword.trim())}` : paths.products);
+  };
 
   const navLinks = (
     <nav className="store-nav" aria-label="Điều hướng chính">
@@ -45,34 +59,48 @@ export function StorefrontLayout() {
         <div className="store-container store-header-inner">
           <StoreLogo />
 
-          <div className="desktop-nav">{navLinks}</div>
+          <div className="store-header-info desktop-only">
+            <CustomerServiceOutlined />
+            <span>Hotline: <strong>0977 508 430</strong></span>
+          </div>
+
+          <div className="store-header-info desktop-only">
+            <EnvironmentOutlined />
+            <span>Hệ thống cửa hàng</span>
+          </div>
+
+          <form className="store-search desktop-only" onSubmit={submitSearch}>
+            <Input
+              value={keyword}
+              onChange={(event) => setKeyword(event.target.value)}
+              placeholder="Tìm sản phẩm..."
+              suffix={<SearchOutlined />}
+              aria-label="Tìm kiếm sản phẩm"
+            />
+          </form>
 
           <div className="store-actions">
-            <Button
-              type="text"
-              shape="circle"
-              icon={<UserOutlined />}
-              aria-label="Tài khoản"
-              onClick={() => navigate(paths.account)}
-            />
+            <button className="store-action desktop-only" type="button" onClick={() => navigate(paths.products)}>
+              <EyeOutlined /><span>Tra cứu</span>
+            </button>
+            <button className="store-action" type="button" onClick={() => navigate(paths.account)}>
+              <UserOutlined /><span>Tài khoản</span>
+            </button>
             <Badge count={itemCount} showZero={false}>
-              <Button
-                type="text"
-                shape="circle"
-                icon={<ShoppingCartOutlined />}
-                aria-label="Giỏ hàng"
-                onClick={() => navigate(paths.cart)}
-              />
+              <button className="store-action" type="button" onClick={() => navigate(paths.cart)}>
+                <ShoppingCartOutlined /><span>Giỏ hàng</span>
+              </button>
             </Badge>
-            <Button
+            <button
               className="mobile-menu-button"
-              type="text"
-              shape="circle"
-              icon={<MenuOutlined />}
+              type="button"
               aria-label="Mở menu"
               onClick={() => setMenuOpen(true)}
-            />
+            ><MenuOutlined /></button>
           </div>
+        </div>
+        <div className="store-navigation-bar">
+          <div className="store-container desktop-nav">{navLinks}</div>
         </div>
       </header>
 
@@ -90,6 +118,9 @@ export function StorefrontLayout() {
       </footer>
 
       <Drawer title="Danh mục" placement="right" open={menuOpen} onClose={() => setMenuOpen(false)}>
+        <form className="store-mobile-search" onSubmit={submitSearch}>
+          <Input value={keyword} onChange={(event) => setKeyword(event.target.value)} placeholder="Tìm sản phẩm..." suffix={<SearchOutlined />} />
+        </form>
         <div className="mobile-nav">{navLinks}</div>
       </Drawer>
     </div>

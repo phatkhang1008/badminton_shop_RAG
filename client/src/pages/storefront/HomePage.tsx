@@ -1,89 +1,83 @@
 import {
   ArrowRightOutlined,
-  CustomerServiceOutlined,
-  RobotOutlined,
+  CreditCardOutlined,
+  GiftOutlined,
+  RocketOutlined,
   SafetyCertificateOutlined,
-  ShoppingOutlined,
-  ThunderboltOutlined,
+  SyncOutlined,
+  TrophyOutlined,
+  TruckOutlined,
 } from "@ant-design/icons";
-import { Button, Card, Col, Row, Tag } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { Card, Col, Row } from "antd";
+import { Link } from "react-router-dom";
+import heroBanner from "../../assets/storefront-hero-ocean.png";
 import { paths } from "../../routes/paths";
 
 const categories = [
-  { name: "Vợt cầu lông", description: "Kiểm soát, tốc độ và sức mạnh", symbol: "01" },
-  { name: "Giày cầu lông", description: "Bám sân và bảo vệ từng bước chân", symbol: "02" },
-  { name: "Trang phục", description: "Thoải mái trong mọi trận đấu", symbol: "03" },
-  { name: "Phụ kiện", description: "Hoàn thiện bộ trang bị của bạn", symbol: "04" },
+  { name: "Vợt cầu lông", description: "Sức mạnh và độ chính xác cho từng cú đánh", icon: <TrophyOutlined /> },
+  { name: "Giày thi đấu", description: "Êm chân, bám sân và bảo vệ từng bước", icon: <RocketOutlined /> },
+  { name: "Trang phục", description: "Thoải mái bứt phá trong mọi pha cầu", icon: <GiftOutlined /> },
+  { name: "Phụ kiện", description: "Hoàn thiện bộ trang bị của bạn", icon: <SafetyCertificateOutlined /> },
 ];
 
 const benefits = [
-  { icon: <SafetyCertificateOutlined />, title: "Sản phẩm chính hãng", text: "Thông tin rõ ràng, nguồn gốc minh bạch." },
-  { icon: <CustomerServiceOutlined />, title: "Hỗ trợ tận tâm", text: "Tư vấn theo nhu cầu và trình độ người chơi." },
-  { icon: <ThunderboltOutlined />, title: "Mua sắm thuận tiện", text: "Tìm kiếm, so sánh và đặt hàng dễ dàng." },
+  { icon: <TruckOutlined />, title: "Vận chuyển toàn quốc", text: "Thanh toán khi nhận hàng" },
+  { icon: <SafetyCertificateOutlined />, title: "Bảo đảm chất lượng", text: "Cam kết sản phẩm chính hãng" },
+  { icon: <CreditCardOutlined />, title: "Thanh toán linh hoạt", text: "Đa dạng phương thức thanh toán" },
+  { icon: <SyncOutlined />, title: "Đổi trả dễ dàng", text: "Hỗ trợ đổi mới khi có lỗi" },
 ];
 
 export function HomePage() {
-  const navigate = useNavigate();
-
   return (
     <>
       <section className="home-hero">
+        <img className="home-hero-background" src={heroBanner} alt="Các vận động viên cầu lông thi đấu trong nhà" />
+        <div className="home-hero-overlay" />
         <div className="store-container home-hero-grid">
           <div className="home-hero-copy">
-            <Tag className="ocean-tag" icon={<ThunderboltOutlined />}>Trang bị cho mọi trận đấu</Tag>
-            <h1>Nâng tầm từng cú đánh.</h1>
-            <p>
-              Khám phá sản phẩm cầu lông phù hợp với lối chơi của bạn và nhận tư vấn cá nhân hóa
-              từ trợ lý AI.
-            </p>
+            <span className="home-hero-kicker">BSPORT BADMINTON</span>
+            <h1>Chơi hết mình.<br /><em>Chạm đỉnh đam mê.</em></h1>
+            <p>Trang bị chính hãng dành cho người yêu cầu lông, từ buổi tập đầu tiên đến những trận cầu đỉnh cao.</p>
             <div className="home-hero-actions">
-              <Button type="primary" size="large" onClick={() => navigate(paths.products)} icon={<ShoppingOutlined />}>
-                Khám phá sản phẩm
-              </Button>
-              <Button size="large" onClick={() => navigate(paths.aiAdvisor)} icon={<RobotOutlined />}>
-                Tư vấn cùng AI
-              </Button>
-            </div>
-            <div className="home-trust-row">
-              <span><strong>100%</strong> chính hãng</span>
-              <span><strong>Đa dạng</strong> thương hiệu</span>
-              <span><strong>Thông minh</strong> với RAG</span>
-            </div>
-          </div>
-
-          <div className="home-hero-art" aria-hidden="true">
-            <div className="ocean-orbit ocean-orbit-one" />
-            <div className="ocean-orbit ocean-orbit-two" />
-            <div className="hero-racket">⌁</div>
-            <div className="hero-shuttle">✦</div>
-            <div className="hero-product-card">
-              <span>Sản phẩm phù hợp</span>
-              <strong>Được chọn theo lối chơi</strong>
-              <small>AI recommendation</small>
+              <Link className="home-primary-cta" to={paths.products}>Khám phá ngay <ArrowRightOutlined /></Link>
+              <Link className="home-secondary-cta" to={paths.aiAdvisor}>Tư vấn chọn vợt</Link>
             </div>
           </div>
         </div>
+        <div className="home-slider-dots" aria-label="Slide hiện tại"><i className="active" /><i /><i /></div>
       </section>
 
-      <section className="home-section">
+      <section className="home-benefit-strip">
         <div className="store-container">
-          <div className="section-heading">
-            <div>
-              <span className="eyebrow">Danh mục nổi bật</span>
-              <h2>Sẵn sàng cho sân đấu</h2>
-            </div>
-            <Link to={paths.products}>Xem tất cả <ArrowRightOutlined /></Link>
+          <Row gutter={[18, 18]}>
+            {benefits.map((benefit) => (
+              <Col xs={24} sm={12} lg={6} key={benefit.title}>
+                <div className="home-benefit-item">
+                  <span>{benefit.icon}</span>
+                  <div><strong>{benefit.title}</strong><p>{benefit.text}</p></div>
+                </div>
+              </Col>
+            ))}
+          </Row>
+        </div>
+      </section>
+
+      <section className="home-section home-featured-section">
+        <div className="store-container">
+          <div className="home-section-heading">
+            <span>Sản phẩm mới</span>
+            <h2>Trang bị tốt hơn cho trận cầu hay hơn</h2>
+            <p>Chọn nhanh theo nhóm sản phẩm, thương hiệu và phong cách thi đấu của bạn.</p>
           </div>
           <Row gutter={[18, 18]}>
             {categories.map((category) => (
               <Col xs={24} sm={12} lg={6} key={category.name}>
-                <Link to={paths.products} className="category-link">
-                  <Card className="category-card" hoverable>
-                    <span className="category-number">{category.symbol}</span>
+                <Link to={paths.products} className="home-category-link">
+                  <Card className="home-category-card" hoverable>
+                    <span className="home-category-icon">{category.icon}</span>
                     <h3>{category.name}</h3>
                     <p>{category.description}</p>
-                    <ArrowRightOutlined className="category-arrow" />
+                    <span className="home-category-arrow">Khám phá <ArrowRightOutlined /></span>
                   </Card>
                 </Link>
               </Col>
@@ -92,18 +86,13 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="home-benefits">
+      <section className="home-assurance">
         <div className="store-container">
-          <Row gutter={[20, 20]}>
-            {benefits.map((benefit) => (
-              <Col xs={24} md={8} key={benefit.title}>
-                <div className="benefit-item">
-                  <span className="benefit-icon">{benefit.icon}</span>
-                  <div><h3>{benefit.title}</h3><p>{benefit.text}</p></div>
-                </div>
-              </Col>
-            ))}
-          </Row>
+          <div>
+            <span>Chính hãng &amp; đáng tin cậy</span>
+            <h2>Đồng hành cùng niềm vui trên từng sân đấu.</h2>
+          </div>
+          <Link to={paths.products}>Xem tất cả sản phẩm <ArrowRightOutlined /></Link>
         </div>
       </section>
     </>
