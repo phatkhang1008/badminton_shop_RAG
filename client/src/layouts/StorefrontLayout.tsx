@@ -8,6 +8,7 @@ import { Badge, Button, Drawer } from "antd";
 import { useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { StoreLogo } from "../components/storefront/StoreLogo";
+import { useCart } from "../cart/useCart";
 import { paths } from "../routes/paths";
 
 const navigation = [
@@ -19,6 +20,7 @@ const navigation = [
 export function StorefrontLayout() {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { itemCount } = useCart();
 
   const navLinks = (
     <nav className="store-nav" aria-label="Điều hướng chính">
@@ -53,7 +55,7 @@ export function StorefrontLayout() {
               aria-label="Tài khoản"
               onClick={() => navigate(paths.account)}
             />
-            <Badge count={0} showZero={false}>
+            <Badge count={itemCount} showZero={false}>
               <Button
                 type="text"
                 shape="circle"

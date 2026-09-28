@@ -10,6 +10,7 @@
     "lint": "tsc -p tsconfig.json --noEmit",
     "seed:admin": "tsx src/scripts/seedAdmin.ts",
     "seed:catalog": "tsx src/scripts/seedCatalog.ts",
+    "seed:products": "tsx src/scripts/seedProducts.ts",
     "migrate:catalog-images": "tsx src/scripts/migrateCatalogImagesToGridFS.ts"
   },
   "dependencies": {

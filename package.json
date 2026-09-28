@@ -12,6 +12,7 @@
     "lint": "npm run lint -w server && npm run lint -w client",
     "seed:admin": "npm run seed:admin -w server",
     "seed:catalog": "npm run seed:catalog -w server",
+    "seed:products": "npm run seed:products -w server",
     "migrate:catalog-images": "npm run migrate:catalog-images -w server"
   },
   "devDependencies": {

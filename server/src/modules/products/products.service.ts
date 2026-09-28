@@ -9,7 +9,12 @@ import {
   type ProductSpecification,
   type ProductVariant,
 } from "./product.model.js";
-import type { CreateProductInput, ListProductsQuery, UpdateProductInput } from "./products.schemas.js";
+import type {
+  CreateProductInput,
+  ListProductsQuery,
+  ListPublicProductsQuery,
+  UpdateProductInput,
+} from "./products.schemas.js";
 
 const duplicateError = (error: unknown) => Boolean(error && typeof error === "object" && "code" in error && error.code === 11000);
 function validId(id: string, label: string) {
@@ -135,6 +140,66 @@ export async function listProducts(query: ListProductsQuery) {
   };
 }
 
+function publicProductPayload<T extends { _id: Types.ObjectId; variants: ProductVariant[] }>(item: T) {
+  return {
+    ...item,
+    id: item._id.toString(),
+    totalStock: item.variants.reduce((sum, variant) => sum + variant.stock, 0),
+  };
+}
+
+export async function listPublicProducts(query: ListPublicProductsQuery) {
+  const filter: Record<string, unknown> = { deletedAt: null, status: "active" };
+  const [category, brand] = await Promise.all([
+    query.category === "all"
+      ? null
+      : CategoryModel.findOne({ slug: query.category, status: "active", deletedAt: null }, "_id").lean(),
+    query.brand === "all"
+      ? null
+      : BrandModel.findOne({ slug: query.brand, status: "active", deletedAt: null }, "_id").lean(),
+  ]);
+
+  if ((query.category !== "all" && !category) || (query.brand !== "all" && !brand)) {
+    filter._id = { $exists: false };
+  } else {
+    if (category) filter.category = category._id;
+    if (brand) filter.brand = brand._id;
+  }
+  if (query.search) {
+    const regex = new RegExp(query.search.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+    filter.$or = [{ name: regex }, { "variants.sku": regex }];
+  }
+
+  const sort: Record<string, 1 | -1> = query.sort === "price-asc"
+    ? { basePrice: 1 }
+    : query.sort === "price-desc"
+      ? { basePrice: -1 }
+      : { createdAt: -1 };
+  const skip = (query.page - 1) * query.limit;
+  const activeFilter = { deletedAt: null, status: "active" as const };
+  const [items, total, categories, brands] = await Promise.all([
+    ProductModel.find(filter)
+      .populate("category", "name slug")
+      .populate("brand", "name slug")
+      .sort(sort)
+      .skip(skip)
+      .limit(query.limit)
+      .lean(),
+    ProductModel.countDocuments(filter),
+    CategoryModel.find(activeFilter, "name slug").sort({ sortOrder: 1, name: 1 }).lean(),
+    BrandModel.find(activeFilter, "name slug").sort({ sortOrder: 1, name: 1 }).lean(),
+  ]);
+
+  return {
+    products: items.map((item) => publicProductPayload(item)),
+    filters: {
+      categories: categories.map((item) => ({ name: item.name, slug: item.slug })),
+      brands: brands.map((item) => ({ name: item.name, slug: item.slug })),
+    },
+    pagination: { page: query.page, limit: query.limit, total, totalPages: Math.max(1, Math.ceil(total / query.limit)) },
+  };
+}
+
 export async function getProduct(id: string) {
   validId(id, "Mã sản phẩm");
   const product = await ProductModel.findOne({ _id: id, deletedAt: null })
@@ -143,6 +208,15 @@ export async function getProduct(id: string) {
     .lean();
   if (!product) throw new AppError("Không tìm thấy sản phẩm.", 404, "PRODUCT_NOT_FOUND");
   return { ...product, id: product._id.toString(), totalStock: product.variants.reduce((sum, variant) => sum + variant.stock, 0) };
+}
+
+export async function getPublicProductBySlug(slug: string) {
+  const product = await ProductModel.findOne({ slug, deletedAt: null, status: "active" })
+    .populate("category", "name slug attributes")
+    .populate("brand", "name slug")
+    .lean();
+  if (!product) throw new AppError("Không tìm thấy sản phẩm.", 404, "PRODUCT_NOT_FOUND");
+  return publicProductPayload(product);
 }
 
 export async function createProduct(input: CreateProductInput) {

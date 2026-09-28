@@ -7,6 +7,13 @@ import { StorefrontLayout } from "../layouts/StorefrontLayout";
 import { paths } from "./paths";
 
 const HomePage = lazy(() => import("../pages/storefront/HomePage").then((module) => ({ default: module.HomePage })));
+const ProductListPage = lazy(() =>
+  import("../pages/storefront/ProductListPage").then((module) => ({ default: module.ProductListPage })),
+);
+const ProductDetailPage = lazy(() =>
+  import("../pages/storefront/ProductDetailPage").then((module) => ({ default: module.ProductDetailPage })),
+);
+const CartPage = lazy(() => import("../pages/storefront/CartPage").then((module) => ({ default: module.CartPage })));
 const StorefrontPlaceholderPage = lazy(() =>
   import("../pages/storefront/StorefrontPlaceholderPage").then((module) => ({ default: module.StorefrontPlaceholderPage })),
 );
@@ -35,10 +42,10 @@ export function AppRoutes() {
       <Routes>
         <Route path={paths.home} element={<StorefrontLayout />}>
           <Route index element={<HomePage />} />
-          <Route path="products" element={<StorefrontPlaceholderPage />} />
-          <Route path="products/:slug" element={<StorefrontPlaceholderPage />} />
+          <Route path="products" element={<ProductListPage />} />
+          <Route path="products/:slug" element={<ProductDetailPage />} />
           <Route path="ai-advisor" element={<StorefrontPlaceholderPage />} />
-          <Route path="cart" element={<StorefrontPlaceholderPage />} />
+          <Route path="cart" element={<CartPage />} />
           <Route path="account" element={<StorefrontPlaceholderPage />} />
         </Route>
 

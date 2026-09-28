@@ -76,6 +76,16 @@ export const listProductsQuerySchema = z.object({
   status: z.enum(["all", "draft", "active", "inactive"]).default("all"),
 });
 
+export const listPublicProductsQuerySchema = z.object({
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(6).max(48).default(12),
+  search: z.string().trim().max(100).default(""),
+  category: z.string().trim().max(200).default("all"),
+  brand: z.string().trim().max(200).default("all"),
+  sort: z.enum(["newest", "price-asc", "price-desc"]).default("newest"),
+});
+
 export type CreateProductInput = z.infer<typeof createProductSchema>;
 export type UpdateProductInput = z.infer<typeof updateProductSchema>;
 export type ListProductsQuery = z.infer<typeof listProductsQuerySchema>;
+export type ListPublicProductsQuery = z.infer<typeof listPublicProductsQuerySchema>;
