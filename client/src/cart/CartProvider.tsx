@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import type { StorefrontProduct, StorefrontProductVariant } from "../api/storefront/products.api";
-import { getPrimaryImage, getVariantPricing } from "../components/storefront/productPresentation";
+import { getPrimaryImage, getVariantName, getVariantPricing } from "../components/storefront/productPresentation";
 import { CartContext, type CartContextValue, type CartItem } from "./cartContext";
 
 const storageKey = "badminton-shop-cart";
@@ -41,7 +41,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         imageUrl: selectedVariant.imageUrl || primaryImage?.url || "",
         imageAlt: primaryImage?.alt || product.name,
         variantSku: selectedVariant.sku,
-        variantName: selectedVariant.colorName,
+        variantName: getVariantName(selectedVariant),
         colorHex: selectedVariant.colorHex,
         price: salePrice ?? regularPrice,
         quantity: 1,

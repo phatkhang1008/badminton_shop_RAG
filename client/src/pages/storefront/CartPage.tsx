@@ -57,8 +57,8 @@ export function CartPage() {
               <div><span>Tạm tính ({itemCount} sản phẩm)</span><strong>{formatCurrency(subtotal)}</strong></div>
               <div><span>Phí vận chuyển</span><span>Chọn ở bước đặt hàng</span></div>
               <div className="store-cart-total"><span>Tổng cộng</span><strong>{formatCurrency(subtotal)}</strong></div>
-              <Alert type="info" showIcon message="Chức năng đặt hàng đang được hoàn thiện." />
-              <Button type="primary" size="large" block disabled>Tiến hành đặt hàng</Button>
+              <Alert type="info" showIcon message="Kiểm tra địa chỉ và phương thức thanh toán ở bước tiếp theo." />
+              <Link to={paths.checkout}><Button type="primary" size="large" block>Tiến hành đặt hàng</Button></Link>
               <Link to={paths.products} className="store-cart-continue">← Tiếp tục mua sắm</Link>
             </Card>
           </aside>

@@ -18,11 +18,9 @@ import { paths } from "../routes/paths";
 const navigation = [
   { label: "Trang chủ", to: paths.home },
   { label: "Sản phẩm", to: paths.products },
-  { label: "Sale off", to: paths.products },
-  { label: "Tin tức", to: paths.aiAdvisor },
   { label: "Tư vấn AI", to: paths.aiAdvisor, icon: <RobotOutlined /> },
-  { label: "Giới thiệu", to: paths.account },
-  { label: "Liên hệ", to: paths.account },
+  { label: "Giỏ hàng", to: paths.cart },
+  { label: "Tài khoản", to: paths.account },
 ];
 
 export function StorefrontLayout() {
@@ -117,7 +115,7 @@ export function StorefrontLayout() {
         </div>
       </footer>
 
-      <Drawer title="Danh mục" placement="right" open={menuOpen} onClose={() => setMenuOpen(false)}>
+      <Drawer title="Menu" placement="right" open={menuOpen} onClose={() => setMenuOpen(false)}>
         <form className="store-mobile-search" onSubmit={submitSearch}>
           <Input value={keyword} onChange={(event) => setKeyword(event.target.value)} placeholder="Tìm sản phẩm..." suffix={<SearchOutlined />} />
         </form>

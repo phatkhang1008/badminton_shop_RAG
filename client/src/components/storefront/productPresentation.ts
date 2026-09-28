@@ -16,6 +16,13 @@ export function getVariantPricing(product: StorefrontProduct, variant?: Storefro
   return { regularPrice, salePrice: salePrice != null && salePrice < regularPrice ? salePrice : null };
 }
 
+export function getVariantName(variant: StorefrontProductVariant) {
+  const attributes = variant.attributes
+    .map((attribute) => `${attribute.label}: ${attribute.value}`)
+    .filter(Boolean);
+  return [variant.colorName, ...attributes].filter(Boolean).join(" · ");
+}
+
 export function getStartingPrice(product: StorefrontProduct) {
   const prices = product.variants.map((variant) => getVariantPricing(product, variant).salePrice ?? getVariantPricing(product, variant).regularPrice);
   return Math.min(product.salePrice ?? product.basePrice, ...prices);

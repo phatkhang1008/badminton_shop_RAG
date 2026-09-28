@@ -4,7 +4,8 @@ import { Alert, App, Button, Card, Col, Result, Row, Skeleton, Tag } from "antd"
 import { useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { getStorefrontProduct, type StorefrontProduct } from "../../api/storefront/products.api";
-import { formatCurrency, getPrimaryImage, getVariantPricing } from "../../components/storefront/productPresentation";
+import { formatCurrency, getPrimaryImage, getVariantName, getVariantPricing } from "../../components/storefront/productPresentation";
+import { ProductRichText } from "../../components/storefront/ProductRichText";
 import { paths } from "../../routes/paths";
 import { useCart } from "../../cart/useCart";
 
@@ -84,11 +85,12 @@ function ProductDetailContent({ product }: { product: StorefrontProduct }) {
                         type="button"
                         key={variant.sku}
                         disabled={variant.stock === 0}
-                        onClick={() => setSelectedSku(variant.sku)}
+                        onClick={() => { setSelectedSku(variant.sku); setImageFailed(false); }}
                         className={selectedVariant?.sku === variant.sku ? "active" : ""}
+                        aria-label={`Chọn phiên bản ${getVariantName(variant)}`}
                       >
                         {variant.colorHex && <i style={{ backgroundColor: variant.colorHex }} />}
-                        {variant.colorName}
+                        {getVariantName(variant)}
                       </button>
                     ))}
                   </div>
@@ -112,9 +114,10 @@ function ProductDetailContent({ product }: { product: StorefrontProduct }) {
         <Row gutter={[24, 24]} className="store-product-detail-sections">
           <Col xs={24} lg={product.specifications.length ? 14 : 24}>
             <Card title="Mô tả sản phẩm" className="store-detail-card">
-              {product.description ? (
-                <div className="store-rich-description" dangerouslySetInnerHTML={{ __html: product.description }} />
-              ) : <p>{product.shortDescription || "Thông tin chi tiết sẽ được cập nhật sớm."}</p>}
+              <ProductRichText
+                html={product.description}
+                fallback={product.shortDescription || "Thông tin chi tiết sẽ được cập nhật sớm."}
+              />
             </Card>
           </Col>
           {product.specifications.length > 0 && (

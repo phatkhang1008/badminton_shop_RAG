@@ -20,11 +20,18 @@ export interface StorefrontProductSpecification {
   unit: string;
 }
 
+export interface StorefrontProductVariantAttribute {
+  key: string;
+  label: string;
+  value: string;
+}
+
 export interface StorefrontProductVariant {
   _id?: string;
   sku: string;
   colorName: string;
   colorHex: string;
+  attributes: StorefrontProductVariantAttribute[];
   price?: number | null;
   salePrice?: number | null;
   stock: number;
