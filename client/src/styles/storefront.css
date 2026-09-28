@@ -308,6 +308,9 @@
 .store-specifications > div:last-child { padding-bottom: 0; border: 0; }
 .store-specifications dt { color: #6b8193; }
 .store-specifications dd { margin: 0; color: #173c55; font-weight: 650; text-align: right; }
+.store-related-products { margin-top: 72px; }
+.store-related-heading { margin-bottom: 24px; }
+.store-related-heading h2 { margin: 6px 0 0; color: #082f49; font-size: clamp(25px, 3vw, 34px); letter-spacing: -0.035em; }
 
 .store-cart-page { min-height: calc(100vh - 164px); padding: 62px 0 88px; background: linear-gradient(180deg, #f5faff 0, #fff 360px); }
 .store-cart-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; margin-bottom: 32px; }
@@ -345,6 +348,9 @@
 .store-checkout-heading { margin-bottom: 30px; }
 .store-checkout-heading h1 { margin: 7px 0 10px; color: #082f49; font-size: clamp(32px, 4vw, 47px); letter-spacing: -0.045em; line-height: 1.06; }
 .store-checkout-heading p { margin: 0; color: #5d7387; font-size: 15px; line-height: 1.65; }
+.store-checkout-steps { max-width: 760px; margin: 0 0 29px; }
+.store-checkout-steps .ant-steps-item-title { color: #24455e; font-size: 13px; font-weight: 700; }
+.store-checkout-steps .ant-steps-item-process .ant-steps-item-icon, .store-checkout-steps .ant-steps-item-finish .ant-steps-item-icon { background: #0369a1; border-color: #0369a1; }
 .store-checkout-contract-notice { margin: -7px 0 22px; }
 .store-checkout-form { display: grid; gap: 18px; }
 .store-checkout-card { border-color: #dce9f5; box-shadow: 0 10px 28px rgba(3, 105, 161, 0.055); }
@@ -359,6 +365,14 @@
 .store-payment-methods strong { color: #173c55; font-size: 13px; }
 .store-payment-methods span { margin-top: 3px; color: #668095; font-size: 12px; line-height: 1.55; }
 .store-checkout-submit { min-height: 48px; font-weight: 750; }
+.store-checkout-review > .ant-card-body > p { margin: 0 0 20px; color: #5d7387; font-size: 14px; }
+.store-checkout-review dl { display: grid; gap: 0; margin: 0; }
+.store-checkout-review dl > div { display: grid; grid-template-columns: minmax(130px, 0.55fr) minmax(0, 1.45fr); gap: 15px; padding: 13px 0; border-bottom: 1px solid #e4eef5; }
+.store-checkout-review dt { color: #668095; font-size: 13px; }
+.store-checkout-review dt .anticon { margin-right: 6px; color: #0369a1; }
+.store-checkout-review dd { margin: 0; color: #173c55; font-size: 13px; font-weight: 650; line-height: 1.6; }
+.store-checkout-review-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.store-checkout-review > .ant-card-body > small { display: block; margin-top: 12px; color: #668095; font-size: 11px; line-height: 1.5; }
 .store-checkout-summary-wrap { position: sticky; top: 94px; }
 .store-checkout-summary { border-color: #dce9f5; box-shadow: 0 13px 30px rgba(3, 105, 161, 0.07); }
 .store-checkout-summary .ant-card-head-title { color: #0f2740; }
@@ -415,8 +429,10 @@
   .store-product-detail { padding-block: 27px 60px; }
   .store-product-info h1 { font-size: 33px; }
   .store-product-detail-sections { margin-top: 42px; }
+  .store-related-products { margin-top: 48px; }
   .store-cart-page { padding-block: 42px 60px; }
   .store-checkout-page { padding-block: 42px 60px; }
+  .store-checkout-steps { margin-bottom: 24px; }
   .store-cart-heading { align-items: flex-start; }
   .store-cart-heading h1 { font-size: 35px; }
   .store-cart-item .ant-card-body { grid-template-columns: 76px minmax(0, 1fr) auto; gap: 12px; padding: 12px; }

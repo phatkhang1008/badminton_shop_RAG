@@ -6,6 +6,7 @@ import { Link, useParams } from "react-router-dom";
 import { getStorefrontProduct, type StorefrontProduct } from "../../api/storefront/products.api";
 import { formatCurrency, getPrimaryImage, getVariantName, getVariantPricing } from "../../components/storefront/productPresentation";
 import { ProductRichText } from "../../components/storefront/ProductRichText";
+import { RelatedProducts } from "../../components/storefront/RelatedProducts";
 import { paths } from "../../routes/paths";
 import { useCart } from "../../cart/useCart";
 
@@ -135,6 +136,7 @@ function ProductDetailContent({ product }: { product: StorefrontProduct }) {
             </Col>
           )}
         </Row>
+        <RelatedProducts productId={product.id} category={product.category.slug} />
       </div>
     </section>
   );

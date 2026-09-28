@@ -1,10 +1,11 @@
 import { CheckCircleFilled, InfoCircleOutlined } from "@ant-design/icons";
-import { Alert, Col, Row } from "antd";
+import { Alert, Col, Row, Steps } from "antd";
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useCart } from "../../cart/useCart";
 import { CheckoutCustomerForm, type CheckoutFormValues } from "../../components/storefront/CheckoutCustomerForm";
 import { CheckoutOrderSummary } from "../../components/storefront/CheckoutOrderSummary";
+import { CheckoutReview } from "../../components/storefront/CheckoutReview";
 import { paths } from "../../routes/paths";
 
 export function CheckoutPage() {
@@ -21,6 +22,11 @@ export function CheckoutPage() {
           <h1>Hoàn tất thông tin đặt hàng</h1>
           <p>Kiểm tra thông tin nhận hàng và đơn hàng trước khi xác nhận.</p>
         </header>
+        <Steps
+          className="store-checkout-steps"
+          current={submittedValues ? 1 : 0}
+          items={[{ title: "Thông tin giao nhận" }, { title: "Xác nhận" }, { title: "Tạo đơn" }]}
+        />
         {submittedValues && (
           <Alert
             className="store-checkout-contract-notice"
@@ -32,7 +38,9 @@ export function CheckoutPage() {
           />
         )}
         <Row gutter={[28, 28]} align="top">
-          <Col xs={24} lg={15}><CheckoutCustomerForm onFinish={setSubmittedValues} /></Col>
+          <Col xs={24} lg={15}>
+            {submittedValues ? <CheckoutReview values={submittedValues} onEdit={() => setSubmittedValues(null)} /> : <CheckoutCustomerForm onFinish={setSubmittedValues} />}
+          </Col>
           <Col xs={24} lg={9}><CheckoutOrderSummary items={items} itemCount={itemCount} subtotal={subtotal} /></Col>
         </Row>
         <div className="store-checkout-security"><CheckCircleFilled /> Thông tin này chỉ được dùng trong phiên checkout hiện tại và không lưu access token ở trình duyệt.</div>
