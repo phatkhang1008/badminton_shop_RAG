@@ -42,7 +42,7 @@ export function CartPage() {
                 <strong className="store-cart-item-price">{formatCurrency(item.price)}</strong>
                 <div className="store-quantity-control">
                   <Button size="small" shape="circle" icon={<MinusOutlined />} aria-label={`Giảm số lượng ${item.name}`} onClick={() => updateQuantity(item.key, item.quantity - 1)} />
-                  <InputNumber min={1} max={item.stock} value={item.quantity} controls={false} aria-label={`Số lượng ${item.name}`} onChange={(value) => updateQuantity(item.key, Number(value ?? 1))} />
+                  <InputNumber min={1} max={item.stock} step={1} precision={0} value={item.quantity} controls={false} aria-label={`Số lượng ${item.name}`} onChange={(value) => updateQuantity(item.key, Number(value ?? 1))} />
                   <Button size="small" shape="circle" icon={<PlusOutlined />} disabled={item.quantity >= item.stock} aria-label={`Tăng số lượng ${item.name}`} onClick={() => updateQuantity(item.key, item.quantity + 1)} />
                 </div>
                 <div className="store-cart-line-total">
@@ -56,7 +56,7 @@ export function CartPage() {
             <Card className="store-cart-summary" title="Tóm tắt đơn hàng">
               <div><span>Tạm tính ({itemCount} sản phẩm)</span><strong>{formatCurrency(subtotal)}</strong></div>
               <div><span>Phí vận chuyển</span><span>Chọn ở bước đặt hàng</span></div>
-              <div className="store-cart-total"><span>Tổng cộng</span><strong>{formatCurrency(subtotal)}</strong></div>
+              <div className="store-cart-total"><span>Tổng tạm tính</span><strong>{formatCurrency(subtotal)}</strong></div>
               <Alert type="info" showIcon message="Kiểm tra địa chỉ và phương thức thanh toán ở bước tiếp theo." />
               <Link to={paths.checkout}><Button type="primary" size="large" block>Tiến hành đặt hàng</Button></Link>
               <Link to={paths.products} className="store-cart-continue">← Tiếp tục mua sắm</Link>

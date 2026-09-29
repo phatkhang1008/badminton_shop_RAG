@@ -10,7 +10,8 @@ import { paths } from "../../routes/paths";
 
 export function CheckoutPage() {
   const { items, itemCount, subtotal } = useCart();
-  const [submittedValues, setSubmittedValues] = useState<CheckoutFormValues | null>(null);
+  const [checkoutValues, setCheckoutValues] = useState<CheckoutFormValues | null>(null);
+  const [isReviewing, setIsReviewing] = useState(false);
 
   if (items.length === 0) return <Navigate to={paths.cart} replace />;
 
@@ -24,22 +25,32 @@ export function CheckoutPage() {
         </header>
         <Steps
           className="store-checkout-steps"
-          current={submittedValues ? 1 : 0}
+          current={isReviewing ? 1 : 0}
           items={[{ title: "Thông tin giao nhận" }, { title: "Xác nhận" }, { title: "Tạo đơn" }]}
         />
-        {submittedValues && (
+        {isReviewing && checkoutValues && (
           <Alert
             className="store-checkout-contract-notice"
             type="info"
             showIcon
             icon={<InfoCircleOutlined />}
             message="Thông tin giao nhận đã hợp lệ"
-            description={`Cảm ơn ${submittedValues.fullName}. Bước tạo đơn và thanh toán sẽ được kích hoạt ngay khi API đơn hàng của backend được thống nhất.`}
+            description={`Cảm ơn ${checkoutValues.fullName}. Bước tạo đơn và thanh toán sẽ được kích hoạt ngay khi API đơn hàng của backend được thống nhất.`}
           />
         )}
         <Row gutter={[28, 28]} align="top">
           <Col xs={24} lg={15}>
-            {submittedValues ? <CheckoutReview values={submittedValues} onEdit={() => setSubmittedValues(null)} /> : <CheckoutCustomerForm onFinish={setSubmittedValues} />}
+            {isReviewing && checkoutValues ? (
+              <CheckoutReview values={checkoutValues} onEdit={() => setIsReviewing(false)} />
+            ) : (
+              <CheckoutCustomerForm
+                initialValues={checkoutValues ?? undefined}
+                onFinish={(values) => {
+                  setCheckoutValues(values);
+                  setIsReviewing(true);
+                }}
+              />
+            )}
           </Col>
           <Col xs={24} lg={9}><CheckoutOrderSummary items={items} itemCount={itemCount} subtotal={subtotal} /></Col>
         </Row>

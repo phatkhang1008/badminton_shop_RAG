@@ -5,14 +5,21 @@ import { CartContext, type CartContextValue, type CartItem } from "./cartContext
 
 const storageKey = "badminton-shop-cart";
 
+function isPositiveInteger(value: unknown) {
+  return typeof value === "number" && Number.isInteger(value) && value > 0;
+}
+
 function getStoredCart(): CartItem[] {
   if (typeof window === "undefined") return [];
   try {
     const stored = JSON.parse(window.localStorage.getItem(storageKey) ?? "[]");
     if (!Array.isArray(stored)) return [];
     return stored.filter((item): item is CartItem => (
-      item && typeof item.key === "string" && typeof item.name === "string" &&
-      typeof item.price === "number" && typeof item.quantity === "number" && typeof item.stock === "number"
+      item && typeof item.key === "string" && typeof item.productId === "string" && typeof item.slug === "string" &&
+      typeof item.name === "string" && typeof item.variantSku === "string" && typeof item.variantName === "string" &&
+      typeof item.imageUrl === "string" && typeof item.imageAlt === "string" && typeof item.colorHex === "string" &&
+      typeof item.price === "number" && Number.isFinite(item.price) && item.price >= 0 &&
+      isPositiveInteger(item.quantity) && isPositiveInteger(item.stock) && item.quantity <= item.stock
     ));
   } catch {
     return [];
@@ -29,7 +36,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const value = useMemo<CartContextValue>(() => {
     const addProduct = (product: StorefrontProduct, variant?: StorefrontProductVariant) => {
       const selectedVariant = variant ?? product.variants[0];
-      if (!selectedVariant || selectedVariant.stock < 1) return;
+      const stock = selectedVariant ? Math.floor(selectedVariant.stock) : 0;
+      if (!selectedVariant || stock < 1) return;
       const key = `${product.id}:${selectedVariant.sku}`;
       const primaryImage = getPrimaryImage(product.images);
       const { regularPrice, salePrice } = getVariantPricing(product, selectedVariant);
@@ -45,7 +53,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         colorHex: selectedVariant.colorHex,
         price: salePrice ?? regularPrice,
         quantity: 1,
-        stock: selectedVariant.stock,
+        stock,
       };
 
       setItems((current) => {
@@ -61,8 +69,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     const updateQuantity = (key: string, quantity: number) => {
       setItems((current) => current.flatMap((item) => {
         if (item.key !== key) return [item];
-        if (quantity <= 0) return [];
-        return [{ ...item, quantity: Math.min(quantity, item.stock) }];
+        const stock = Math.floor(item.stock);
+        const nextQuantity = Number.isFinite(quantity) ? Math.floor(quantity) : 0;
+        if (stock < 1 || nextQuantity < 1) return [];
+        return [{ ...item, stock, quantity: Math.min(nextQuantity, stock) }];
       }));
     };
 

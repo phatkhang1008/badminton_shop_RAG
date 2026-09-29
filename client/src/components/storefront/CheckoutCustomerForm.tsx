@@ -12,11 +12,12 @@ export interface CheckoutFormValues {
 
 interface CheckoutCustomerFormProps {
   onFinish: (values: CheckoutFormValues) => void;
+  initialValues?: CheckoutFormValues;
 }
 
-export function CheckoutCustomerForm({ onFinish }: CheckoutCustomerFormProps) {
+export function CheckoutCustomerForm({ onFinish, initialValues }: CheckoutCustomerFormProps) {
   return (
-    <Form<CheckoutFormValues> className="store-checkout-form" layout="vertical" initialValues={{ paymentMethod: "cod" }} onFinish={onFinish}>
+    <Form<CheckoutFormValues> className="store-checkout-form" layout="vertical" initialValues={initialValues ?? { paymentMethod: "cod" }} onFinish={onFinish}>
       <Card className="store-checkout-card" title="Thông tin giao nhận">
         <Row gutter={[16, 0]}>
           <Col xs={24} md={12}>
